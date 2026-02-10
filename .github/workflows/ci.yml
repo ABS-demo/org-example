@@ -45,22 +45,22 @@
 #####################
 
 
-
-name: Nightly Matrix
+name: Max Parallel Matrix Example
 
 on:
-  schedule:
-    - cron: '04 22 * * *' # 02:00 UTC daily
-  workflow_dispatch:
+  push:
+  pull_request:
 
 jobs:
-  nightly:
+  build:
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.8","3.9","3.10","3.11","3.12","3.7"]
+      max-parallel: 2
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Report
-        run: echo "Nightly run for ${{ matrix.python-version }} at $(date -u)"
+
+      - name: Print python-version
+        run: echo "Running for python ${{ matrix.python-version }}"
