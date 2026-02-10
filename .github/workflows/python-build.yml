@@ -1,40 +1,82 @@
-name: "Reusable: Python Build"
+# name: "Reusable: Python Build"
+
+# on:
+#   workflow_call:                 # makes this workflow callable by other workflows
+#     inputs:
+#       python-version:
+#         description: "Python version"
+#         required: false
+#         type: string
+#         default: "3.11"
+#       runner-os:
+#         description: "GitHub runner OS"
+#         required: false
+#         type: string
+#         default: "ubuntu-latest"
+
+# jobs:
+#   build:
+#     runs-on: ${{ inputs.runner-os }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#         # required to access source, tests, requirements.txt
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: ${{ inputs.python-version }}
+#         # installs the Python version provided by the caller
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+
+#         # fail early so caller gets clear feedback
+
+#       - name: Run unit tests
+#         run: pytest -q
+#         # If tests fail, this job exits non-zero and caller receives failure
+        
+        
+        
+        
+        ###############################
+
+
+name: Reusable Build (emit version)
 
 on:
-  workflow_call:                 # makes this workflow callable by other workflows
+  workflow_call:
+    outputs:
+      build-version:
+        type: string
     inputs:
       python-version:
-        description: "Python version"
-        required: false
         type: string
+        required: false
         default: "3.11"
-      runner-os:
-        description: "GitHub runner OS"
-        required: false
-        type: string
-        default: "ubuntu-latest"
 
 jobs:
   build:
-    runs-on: ${{ inputs.runner-os }}
+    runs-on: ubuntu-latest
+    outputs:
+      build-version: ${{ steps.setver.outputs.build_version }}
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-        # required to access source, tests, requirements.txt
 
-      - name: Set up Python
+      - name: Set up python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python-version }}
-        # installs the Python version provided by the caller
 
-      - name: Install dependencies
+      - id: setver
+        name: Set build version
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          # In real world you'd compute or read the version
+          echo "build_version=1.2.3" >> $GITHUB_OUTPUT
 
-        # fail early so caller gets clear feedback
-
-      - name: Run unit tests
-        run: pytest -q
-        # If tests fail, this job exits non-zero and caller receives failure
+      - name: Run unit tests (no-op example)
+        run: echo "Unit tests would run here"
