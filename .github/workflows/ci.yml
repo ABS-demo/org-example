@@ -44,8 +44,6 @@
 
 #####################
 
-
-
 name: Call Reusable and Show Build Version
 
 on:
@@ -55,11 +53,13 @@ on:
 jobs:
   call-build:
     uses: ./.github/workflows/example_06_reusable_build.yml
+    # Optional: pass input
+    # with:
+    #   python-version: "3.12"
 
   show:
     needs: call-build
     runs-on: ubuntu-latest
     steps:
       - name: Show build version from reusable workflow
-        run: |
-          echo 'Build version : ${{ needs.call-build.outputs.build-version }}'
+        run: echo "Build version: ${{ needs.call-build.outputs.build-version }}"
