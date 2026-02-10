@@ -46,26 +46,21 @@
 
 
 
-name: Matrix Conditional Example
+name: Nightly Matrix
 
 on:
-  push:
-  pull_request:
+  schedule:
+    - cron: '04 22 * * *' # 02:00 UTC daily
+  workflow_dispatch:
 
 jobs:
-  build:
+  nightly:
     strategy:
       matrix:
-        python-version: ["3.10","3.11"]
+        python-version: ["3.11"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Base step
-        run: echo "Running basic steps for Python ${{ matrix.python-version }}"
-
-      - name: Lint on 3.11 only
-        if: matrix.python-version == '3.11'
-        run: |
-          echo "Running linter because python-version is ${{ matrix.python-version }}"
+      - name: Report
+        run: echo "Nightly run for ${{ matrix.python-version }} at $(date -u)"
