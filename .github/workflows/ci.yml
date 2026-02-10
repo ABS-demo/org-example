@@ -23,7 +23,7 @@ jobs:
   # E2E job: runs once after all matrix build runs succeed
   e2e:
     needs: build                # waits for ALL matrix build runs to finish successfully
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
