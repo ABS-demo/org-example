@@ -51,7 +51,7 @@ on:
   workflow_call:
     outputs:
       build-version:
-        type: string
+        value: ${{ jobs.build.outputs.build-version }}
     inputs:
       python-version:
         type: string
