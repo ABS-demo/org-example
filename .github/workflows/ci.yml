@@ -45,19 +45,17 @@
 #####################
 
 
-name: Manual Run
+name: Deploy Only Main
 
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Your name'
-        required: false
-        default: 'friend'
+  push:
 
 jobs:
-  hello:
+  deploy-only-main:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Say hello
-        run: echo "Hello, ${{ github.event.inputs.name }}!"
+      - name: Show branch
+        run: |
+          echo "Ref = $GITHUB_REF"
+          echo "Deploying from main branch"
