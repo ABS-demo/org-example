@@ -8,10 +8,15 @@ on:
         required: false
         type: string
         default: "3.11"
+      runner-os:
+        description: "GitHub runner OS"
+        required: false
+        type: string
+        default: "ubuntu-latest"
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner-os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
