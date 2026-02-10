@@ -46,26 +46,29 @@
 
 
 
-name: Dependency Matrix Test
+name: Matrix Conditional Example
 
 on:
   push:
   pull_request:
 
 jobs:
-  dep-matrix:
+  build:
     strategy:
       matrix:
-        requests-version: ["2.26.0","2.28.0"]
+        python-version: ["3.10","3.11"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Base step
+        run: echo "Running basic steps for Python ${{ matrix.python-version }}"
+
+      - name: Lint on 3.11 only
+        if: matrix.python-version == '3.11'
+        run: |
+          echo "Running linter because python-version is ${{ matrix.python-version }}"
 
       - name: Install the specific requests version and pytest
         run: |
