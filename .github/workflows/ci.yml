@@ -60,4 +60,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run composite action
-        uses: ./.github/actions/say-hello.yml
+        uses: ./.github/actions/say-hello
