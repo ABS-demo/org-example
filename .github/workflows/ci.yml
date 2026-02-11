@@ -1,51 +1,4 @@
-# name: CI — OS + Python matrix
-
-# on:
-#   push:
-#   pull_request:
-
-# jobs:
-#   build:
-#     name: Build (${{ matrix.os }} — py${{ matrix.python-version }})
-#     strategy:
-#       matrix:
-#         python-version: ["3.10", "3.11"]   
-#         os: [ubuntu-latest, windows-latest]
-#       fail-fast: false                     # allow full matrix to complete for diagnostics
-#       max-parallel: 4                      # optional: limit concurrency
-#     uses: ./.github/workflows/python-build.yml
-#     with:
-#       python-version: ${{ matrix.python-version }}
-#       runner-os: ${{ matrix.os }}
-
-#     # Each matrix entry will call the reusable workflow with its python-version.
-
-#   # E2E job: runs once after all matrix build runs succeed
-#   e2e:
-#     needs: build                # waits for ALL matrix build runs to finish successfully
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-#         # every job gets its own runner; checkout again
-
-#       - name: Set up Python for E2E
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version: "3.11"
-
-#       - name: Install deps for E2E
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install -r requirements.txt
-
-#       - name: Run E2E tests
-#         run: pytest tests/e2e -q
-
-#####################
-
-
-name: Fail-Fast Matrix Demo
+name: CI — OS + Python matrix
 
 on:
   push:
@@ -53,16 +6,39 @@ on:
 
 jobs:
   build:
+    name: Build (${{ matrix.os }} — py${{ matrix.python-version }})
     strategy:
       matrix:
-        python-version: ["3.10","3.11","3.12"]
-      fail-fast: true
+        python-version: ["3.10", "3.11"]   
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false                     # allow full matrix to complete for diagnostics
+      max-parallel: 4                      # optional: limit concurrency
+    uses: ./.github/workflows/python-build.yml
+    with:
+      python-version: ${{ matrix.python-version }}
+      runner-os: ${{ matrix.os }}
+
+    # Each matrix entry will call the reusable workflow with its python-version.
+
+  # E2E job: runs once after all matrix build runs succeed
+  e2e:
+    needs: build                # waits for ALL matrix build runs to finish successfully
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "This is matrix entry for ${{ matrix.python-version }}"
-          # Simulate a failure for 3.11 to see fail-fast behavior
-          if [ "${{ matrix.python-version }}" = "3.11" ]; then
-            echo "Simulated failure for 3.11"
-            exit 1
-          fi
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # every job gets its own runner; checkout again
+
+      - name: Set up Python for E2E
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps for E2E
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run E2E tests
+        run: pytest tests/e2e -q
+
